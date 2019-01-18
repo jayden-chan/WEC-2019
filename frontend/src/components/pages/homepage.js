@@ -6,6 +6,7 @@ class Homepage extends Component {
     super(props);
 
     this.state = {
+      gameIsRunning: false,
       sizeString: "10x10",
       size: 10,
       board: undefined,
@@ -60,7 +61,8 @@ class Homepage extends Component {
     console.log(size);
     this.setState({
       localBoard: newBoard,
-      size: size
+      size: size,
+      gameIsRunning: true
     });
 
     console.log('fetching');
@@ -109,22 +111,18 @@ class Homepage extends Component {
           let localBoard = this.state.localBoard;
           localBoard[x][y] = this.state.board.basins[x][y];
           this.setState({localBoard: localBoard});
-          console.log("ok");
         }
         else {
           let localBoard = this.state.localBoard;
-          localBoard[x][y] = "F";
-          this.setState({localBoard: localBoard});
-          console.log('not ok');
+          localBoard[x][y] = "B";
+          this.setState({
+            localBoard: localBoard,
+            gameIsRunning: false
+          });
+
+          alert('You hit a basin! Game over!');
         }
       });
-      // .then(json => {
-      //   if (json !== null) {
-      //     console.log('setting state');
-      //     this.setState({board: json});
-      //     console.log(this.state);
-      //   }
-      // });
   }
 
   getRow(num) {
@@ -136,13 +134,23 @@ class Homepage extends Component {
     const size = this.state.size;
 
     for (let i = 0; i < size; i++) {
-      row.push((
-        <div className="col-sm" key={num + i}>
-          <button onClick={() => this.onClick(i, num)}>
-            {this.state.localBoard[i][num]}
-          </button>
-        </div>
-      ));
+      if (this.state.gameIsRunning) {
+        row.push((
+          <div className="col-sm" key={num + i}>
+            <button onClick={() => this.onClick(i, num)}>
+              {this.state.localBoard[i][num]}
+            </button>
+          </div>
+        ));
+      } else {
+        row.push((
+          <div className="col-sm" key={num + i}>
+            <button disabled onClick={() => this.onClick(i, num)}>
+              {this.state.localBoard[i][num]}
+            </button>
+          </div>
+        ));
+      }
     }
 
     return row;
