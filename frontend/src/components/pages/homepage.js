@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import "../../assets/css/custom.min.css";
 
 class Homepage extends Component {
 
@@ -142,7 +143,7 @@ class Homepage extends Component {
     for (let i = 0; i < size; i++) {
       if (this.state.gameIsRunning) {
         row.push((
-          <div className="col-sm" key={num + i}>
+          <div className="boardCell" key={num + i}>
             <button onClick={() => this.onClick(i, num)}>
               {this.state.localBoard[i][num]}
             </button>
@@ -150,7 +151,7 @@ class Homepage extends Component {
         ));
       } else {
         row.push((
-          <div className="col-sm" key={num + i}>
+          <div className="boardCell" key={num + i}>
             <button disabled onClick={() => this.onClick(i, num)}>
               {this.state.localBoard[i][num]}
             </button>
@@ -181,7 +182,7 @@ class Homepage extends Component {
     }
 
     return (
-      <div>
+      <div className="theBoard">
         <div className="container">
           {rows}
         </div>
@@ -191,13 +192,25 @@ class Homepage extends Component {
 
   options() {
     return (
-     <div className="form-group">
-      <label htmlFor="sel1">Select list:</label>
-      <select name="sizeString" className="form-control" id="sel1" value={this.state.sizeString} onChange={this.handleChange}>
-        <option>10x10</option>
-        <option>20x20</option>
-        <option>30x30</option>
-      </select>
+     <div className="button" class="form-group">
+      
+      <div class="container"  className="optionsLabel">
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <label htmlFor="sel1"><b>Select Board:</b></label>
+          </div>
+          <div class="col-auto">
+            <select name="size" className="form-control" id="sel1" value={this.state.size} onChange={this.handleChange}>
+              <option>10x10</option>
+              <option>20x20</option>
+              <option>30x30</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <input type="submit" className="btn btn-light" value="Start" />
+          </div>
+         </div>
+      </div>
     </div>
     )
   }
@@ -205,11 +218,14 @@ class Homepage extends Component {
   render() {
     return (
       <div>
-        <form method="post" onSubmit={this.handleSubmit}>
-          {this.options()}
-          <input type="submit" className="btn btn-primary" value="Update (this will restart the game)" />
-        </form>
-        {this.board()}
+          <form method="post" onSubmit={this.handleSubmit}>
+            {this.options()}
+          </form>
+          
+
+        <div class="row justify-content-center">
+          {this.board()}
+        </div>
       </div>
     );
   }
