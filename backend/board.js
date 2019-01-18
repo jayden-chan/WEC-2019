@@ -66,10 +66,11 @@ class Board {
   }
 
   /**
-   * @return {Boolean} Whether or not a point is a basin
+   * @return {Integer} The number of adjacent basins if the point
+   * is okay, -1 if the point is not okay
    */
   click(x, y) {
-    return this.board[x][y] === 0;
+    return this.board[x][y] === 0 ? this.adjacentBasins(x, y) : -1;
   }
 }
 

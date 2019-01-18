@@ -119,7 +119,7 @@ class Homepage extends Component {
           localBoard[x][y] = this.state.board.basins[x][y];
           this.setState({localBoard: localBoard});
         }
-        else {
+        else if (res.status === 403){
           let localBoard = this.state.localBoard;
           localBoard[x][y] = "B";
           this.setState({
