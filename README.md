@@ -11,7 +11,7 @@ We completed working on the backend first, with the backend doing the bulk of th
 
 Whenever the user clicks on a tile the frontend makes a backend api call to check if a basin was clicked or to send back the number of basins around that specified tile.
 
-When a basin is hit, the frontend prevents any further clicks and the game ends.
+When a basin is hit, the frontend prevents any further clicks and the game ends. Once the game ends the user is able to start a new game or change the board size.
 
 
 For the AI we initially tried to use Go but settled on node because of time constraints. The AI works by testing out the middle tile and if it's 0 then click all it's surrounding tiles recursively clicking if a zero is revealed. If a zero is not revealed or a number is revealed in the middle spot a new random spot is clicked. As the AI runs it prints the current revealed board to the console
