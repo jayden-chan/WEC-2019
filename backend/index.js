@@ -29,13 +29,13 @@ app.get('/', (req, res) =>  {
 });
 
 app.post('/new', (req, res) => {
-  if (req.body.size === null) {
+  if (!req.body.size) {
     res.status(400).send('need board size');
   }
 
   board = new Board(req.body.size);
   board.genBasins();
-  res.status(200).send(JSON.stringify(board));
+  res.status(200).send('Board created');
 });
 
 app.get('/board', (req, res) => {
@@ -47,7 +47,7 @@ app.get('/board', (req, res) => {
 });
 
 app.post('/click', (req, res) => {
-  if (req.body.x === null || req.body.y === null) {
+  if (!req.body.x || !req.body.y) {
     res.status(400).send('Missing x or y component');
   } else {
     const result = board.click(req.body.x, req.body.y);

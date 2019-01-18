@@ -7,6 +7,8 @@ class Homepage extends Component {
     super(props);
 
     this.state = {
+      gameIsRunning: false,
+      sizeString: "10x10",
       size: 10,
       board: undefined,
       localBoard: []
@@ -21,6 +23,9 @@ class Homepage extends Component {
     const value = target.value;
     const name = target.name;
 
+    console.log(name);
+    console.log(value);
+
     this.setState({
       [name]: value
     });
@@ -31,7 +36,7 @@ class Homepage extends Component {
 
     let size;
 
-    switch(this.state.size) {
+    switch(this.state.sizeString) {
       case "10x10":
         size = 10;
         break;
@@ -54,9 +59,13 @@ class Homepage extends Component {
       }
     }
 
-    this.setState({localBoard: newBoard});
+    console.log(size);
+    this.setState({
+      localBoard: newBoard,
+      size: size,
+      gameIsRunning: true
+    });
 
-    console.log('fetching');
     fetch('/new', {
       method: 'post',
       headers: {
@@ -68,17 +77,24 @@ class Homepage extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          return res.json();
-        }
-        else {
-          return null;
-        }
-      })
-      .then(json => {
-        if (json !== null) {
-          console.log('setting state');
-          this.setState({board: json});
-          console.log(this.state);
+          fetch('/board', {
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+            .then(res => {
+              if (res.status === 200) {
+                return res.json();
+              } else {
+                return null;
+              }
+            })
+            .then(json => {
+              if (json !== null) {
+                this.setState({board: json});
+              }
+            });
         }
       });
 
@@ -102,22 +118,18 @@ class Homepage extends Component {
           let localBoard = this.state.localBoard;
           localBoard[x][y] = this.state.board.basins[x][y];
           this.setState({localBoard: localBoard});
-          console.log("ok");
         }
         else {
           let localBoard = this.state.localBoard;
           localBoard[x][y] = "B";
-          this.setState({localBoard: localBoard});
-          console.log('not ok');
+          this.setState({
+            localBoard: localBoard,
+            gameIsRunning: false
+          });
+
+          alert('You hit a basin! Game over!');
         }
       });
-      // .then(json => {
-      //   if (json !== null) {
-      //     console.log('setting state');
-      //     this.setState({board: json});
-      //     console.log(this.state);
-      //   }
-      // });
   }
 
   getRow(num) {
@@ -126,16 +138,26 @@ class Homepage extends Component {
     }
 
     let row = [];
-    const size = this.state.board.size;
+    const size = this.state.size;
 
     for (let i = 0; i < size; i++) {
-      row.push((
-        <div className="boardCell" key={num + i}>
-          <button onClick={() => this.onClick(i, num)}>
-            {this.state.localBoard[i][num]}
-          </button>
-        </div>
-      ));
+      if (this.state.gameIsRunning) {
+        row.push((
+          <div className="boardCell" key={num + i}>
+            <button onClick={() => this.onClick(i, num)}>
+              {this.state.localBoard[i][num]}
+            </button>
+          </div>
+        ));
+      } else {
+        row.push((
+          <div className="boardCell" key={num + i}>
+            <button disabled onClick={() => this.onClick(i, num)}>
+              {this.state.localBoard[i][num]}
+            </button>
+          </div>
+        ));
+      }
     }
 
     return row;
@@ -151,7 +173,7 @@ class Homepage extends Component {
       )
     }
 
-    for (let i = 0; i < this.state.board.size; i++) {
+    for (let i = 0; i < this.state.size; i++) {
       rows.push((
         <div className="row" key={i}>
           {this.getRow(i)}
