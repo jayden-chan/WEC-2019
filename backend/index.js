@@ -47,14 +47,16 @@ app.get('/board', (req, res) => {
 });
 
 app.post('/click', (req, res) => {
-  if (!req.body.x || !req.body.y) {
+  if (req.body.x === undefined || req.body.y === undefined) {
+    res.status(400).send('Missing x or y component');
+  } else if (req.body.x === null || req.body.y === null) {
     res.status(400).send('Missing x or y component');
   } else {
     const result = board.click(req.body.x, req.body.y);
     if (result) {
       res.status(200).send('OK');
     } else {
-      res.status(400).send('Hit a basin');
+      res.status(403).send('Hit a basin');
     }
   }
 });
