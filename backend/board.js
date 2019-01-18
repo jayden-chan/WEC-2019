@@ -40,7 +40,7 @@ class Board {
         this.board[x][y] = 1;
       }
     }
-    
+
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         this.basins[i][j] = this.adjacentBasins(i, j);
@@ -48,6 +48,9 @@ class Board {
     }
   }
 
+  /**
+   * @return {Integer} The number of adjacent basins to the given point
+   */
   adjacentBasins(x, y) {
     const up = (y === 0) ? 0 : this.board[x][y-1];
     const down = (y === this.size-1) ? 0 : this.board[x][y+1];
@@ -57,14 +60,11 @@ class Board {
     return up + down + left + right;
   }
 
+  /**
+   * @return {Boolean} Whether or not a point is a basin
+   */
   click(x, y) {
     return this.board[x][y] === 0;
-  }
-
-  prettyPrint() {
-    for (let i = 0; i < this.size; i++) {
-      console.log(this.board[i]);
-    }
   }
 }
 
