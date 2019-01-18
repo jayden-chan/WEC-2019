@@ -12,3 +12,10 @@ We completed working on the backend first, with the backend doing the bulk of th
 Whenever the user clicks on a tile the frontend makes a backend api call to check if a basin was clicked or to send back the number of basins around that specified tile.
 
 When a basin is hit, the frontend prevents any further clicks and the game ends.
+
+## Progress
+- [x] Level 1
+- [x] Level 2
+- [x] Level 3A
+- [x] Level 3B
+- [ ] Level 4
