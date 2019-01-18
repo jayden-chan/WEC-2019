@@ -35,7 +35,7 @@ app.post('/new', (req, res) => {
 
   board = new Board(req.body.size);
   board.genBasins();
-  res.status(200).send(JSON.stringify(board));
+  res.status(200).send('Board created');
 });
 
 app.get('/board', (req, res) => {

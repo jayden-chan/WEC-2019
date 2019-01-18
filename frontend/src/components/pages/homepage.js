@@ -65,7 +65,6 @@ class Homepage extends Component {
       gameIsRunning: true
     });
 
-    console.log('fetching');
     fetch('/new', {
       method: 'post',
       headers: {
@@ -77,17 +76,24 @@ class Homepage extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          return res.json();
-        }
-        else {
-          return null;
-        }
-      })
-      .then(json => {
-        if (json !== null) {
-          console.log('setting state');
-          this.setState({board: json});
-          console.log(this.state);
+          fetch('/board', {
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+            .then(res => {
+              if (res.status === 200) {
+                return res.json();
+              } else {
+                return null;
+              }
+            })
+            .then(json => {
+              if (json !== null) {
+                this.setState({board: json});
+              }
+            });
         }
       });
 
