@@ -5,7 +5,7 @@ class Board {
    */
   constructor(size) {
     this.size = (size < 3) ? 3 : size;
-    this.numBasins = Math.floor(Math.sqrt(size));
+    this.numBasins = size;
     this.board = [];
     this.basins = [];
 
