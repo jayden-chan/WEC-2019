@@ -4,9 +4,11 @@ class Homepage extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       size: 10,
-      board: undefined
+      board: undefined,
+      localBoard: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -43,6 +45,16 @@ class Homepage extends Component {
         break;
     }
 
+    let newBoard = [];
+    for (let i = 0; i < size; i++) {
+      newBoard[i] = [];
+      for (let j = 0; j < size; j++) {
+        newBoard[i][j] = "_";
+      }
+    }
+
+    this.setState({localBoard: newBoard});
+
     console.log('fetching');
     fetch('/new', {
       method: 'post',
@@ -72,6 +84,89 @@ class Homepage extends Component {
     event.preventDefault();
   }
 
+  onClick(x, y) {
+    console.log(x, y);
+    fetch('/click', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        x: x,
+        y: y
+      }),
+    })
+      .then(res => {
+        if (res.status === 200) {
+          let localBoard = this.state.localBoard;
+          localBoard[x][y] = this.state.board.basins[x][y];
+          this.setState({localBoard: localBoard});
+          console.log("ok");
+        }
+        else {
+          let localBoard = this.state.localBoard;
+          localBoard[x][y] = "F";
+          this.setState({localBoard: localBoard});
+          console.log('not ok');
+        }
+      });
+      // .then(json => {
+      //   if (json !== null) {
+      //     console.log('setting state');
+      //     this.setState({board: json});
+      //     console.log(this.state);
+      //   }
+      // });
+  }
+
+  getRow(num) {
+    if (this.state.board === undefined) {
+      return [];
+    }
+
+    let row = [];
+    const size = this.state.board.size;
+
+    for (let i = 0; i < size; i++) {
+      row.push((
+        <div className="col-sm" key={num + i}>
+          <button onClick={() => this.onClick(i, num)}>
+            {this.state.localBoard[i][num]}
+          </button>
+        </div>
+      ));
+    }
+
+    return row;
+  }
+
+  board() {
+    let rows = [];
+
+    if (this.state.board === undefined) {
+      return (
+        <div>
+        </div>
+      )
+    }
+
+    for (let i = 0; i < this.state.board.size; i++) {
+      rows.push((
+        <div className="row" key={i}>
+          {this.getRow(i)}
+        </div>
+      ));
+    }
+
+    return (
+      <div>
+        <div className="container">
+          {rows}
+        </div>
+      </div>
+    )
+  }
+
   options() {
     return (
      <div className="form-group">
@@ -92,6 +187,7 @@ class Homepage extends Component {
           {this.options()}
           <input type="submit" className="btn btn-primary" value="Update (this will restart the game)" />
         </form>
+        {this.board()}
       </div>
     );
   }
