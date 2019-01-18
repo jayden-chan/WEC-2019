@@ -47,7 +47,9 @@ app.get('/board', (req, res) => {
 });
 
 app.post('/click', (req, res) => {
-  if (!req.body.x || !req.body.y) {
+  if (req.body.x === undefined || req.body.y === undefined) {
+    res.status(400).send('Missing x or y component');
+  } else if (req.body.x === null || req.body.y === null) {
     res.status(400).send('Missing x or y component');
   } else {
     const result = board.click(req.body.x, req.body.y);
