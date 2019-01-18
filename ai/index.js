@@ -1,43 +1,58 @@
-const readline = require('readline');
 const fetch = require('node-fetch');
 const axios = require('axios');
+const readline = require('readline-sync');
 
-let boardSize;
+let boardSize = 10;
 
-const PROXY_API = 'https://localhost:5000'
+const PROXY_API = 'http://localhost:5000'
 
 async function main() {
+  createBoard();
+}
 
-  console.log('Creating board...');
-  await axios({
+async function createBoard() {
+  console.log(`Creating board with size ${boardSize}...`);
+  await fetch(PROXY_API + '/new', {
     method: 'post',
-    url: PROXY_API + '/new'
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      size: boardSize,
+    }),
   })
-    .then(response => {
-      if (response.status >= 200) {
-        console.log('ok');
-      }
-    })
-    .catch(error => {
-      if (error.response.status === 400) {
-        console.log('error');
-      } else if (error.response.status === 404) {
-        console.log('error');
+    .then(res => {
+      if (res.status === 200) {
+        console.log('Board created');
       } else {
-        console.log('error');
+        console.log('Board creation failed');
+        process.exit(1);
       }
     });
 }
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-rl.question('Please enter the board size: ', (answer) => {
-  console.log(answer);
-  boardSize = answer;
-  rl.close();
-});
+async function click(x, y) {
+  await fetch(PROXY_API + '/click', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      x: x,
+      y: y
+    }),
+  })
+    .then(res => {
+      if (res.status === 200) {
+        console.log('Click succeeded');
+      } else if (res.status === 403) {
+        console.log('Game over');
+        process.exit(1);
+      } else {
+        console.log('Error with click request');
+        process.exit(1);
+      }
+    });
+}
 
 main();
