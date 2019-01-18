@@ -6,9 +6,10 @@ class Board {
   constructor(size) {
     this.size = size;
     this.basins = Math.sqrt(size);
-    this.board = [][];
+    this.board = [];
 
     for (let i = 0; i < this.size; i++) {
+      this.board[i] = [];
       for (let j = 0; j < this.size; j++) {
         this.board[i][j] = 0;
       }

@@ -15,6 +15,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const Board = require('./board.js');
 
 const port = process.env.PORT || 5000;
 
@@ -28,7 +29,7 @@ app.get('/', (req, res) =>  {
   res.send('Hello World!');
 });
 
-app.get('/new' (req, res) => {
+app.get('/new', (req, res) => {
   if (req.body.size === null) {
     res.code(400).send('need board size');
   }
@@ -37,7 +38,7 @@ app.get('/new' (req, res) => {
   res.code(200).send(JSON.stringify(board));
 });
 
-app.get('/board' (req, res) => {
+app.get('/board', (req, res) => {
   if (board instanceof Board) {
     res.code(200).send(JSON.stringify(board));
   } else {
