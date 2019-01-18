@@ -72,6 +72,54 @@ class Homepage extends Component {
     event.preventDefault();
   }
 
+  getRow(num) {
+    if (this.state.board === undefined) {
+      return [];
+    }
+
+    let row = [];
+    const size = this.state.board.size;
+
+    for (let i = 0; i < size; i++) {
+      row.push((
+        <div className="col-sm" key={num + i}>
+          <button>
+            {this.state.board.basins[num][i]}
+          </button>
+        </div>
+      ));
+    }
+
+    return row;
+  }
+
+  board() {
+    let rows = [];
+
+    if (this.state.board === undefined) {
+      return (
+        <div>
+        </div>
+      )
+    }
+
+    for (let i = 0; i < this.state.board.size; i++) {
+      rows.push((
+        <div className="row" key={i}>
+          {this.getRow(i)}
+        </div>
+      ));
+    }
+
+    return (
+      <div>
+        <div className="container" style={{width: '50%'}}>
+          {rows}
+        </div>
+      </div>
+    )
+  }
+
   options() {
     return (
      <div className="form-group">
@@ -92,6 +140,7 @@ class Homepage extends Component {
           {this.options()}
           <input type="submit" className="btn btn-primary" value="Update (this will restart the game)" />
         </form>
+        {this.board()}
       </div>
     );
   }
