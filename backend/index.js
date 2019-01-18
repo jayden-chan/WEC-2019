@@ -1,6 +1,5 @@
 /**
  * WEC 2019 REST Server Code
- * UVic Team A
  *
  * @author Jayden Chan <jaydencn7@gmail.com>
  * @author Cobey Hollier
