@@ -30,8 +30,8 @@ class Board {
    */
   genBasins() {
     for (let i = 0; i < this.numBasins; i++) {
-      let x = Math.floor((Math.random() * 10));
-      let y = Math.floor((Math.random() * 10));
+      let x = Math.floor((Math.random() * this.size));
+      let y = Math.floor((Math.random() * this.size));
 
       if (this.board[x][y] === 1) {
         i--;
