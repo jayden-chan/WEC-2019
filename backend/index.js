@@ -54,7 +54,7 @@ app.post('/click', (req, res) => {
     if (result) {
       res.status(200).send('OK');
     } else {
-      res.status(400).send('Hit a basin');
+      res.status(403).send('Hit a basin');
     }
   }
 });
