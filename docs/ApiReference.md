@@ -16,8 +16,6 @@ Creates a new game
 
 ## `/board` `GET`
 Creates a new game
-### Params
-`board`: The created game board
 
 ### Status
 `400` if `board` hasn't been created
