@@ -5,6 +5,7 @@ class Board {
    */
   constructor(size) {
     this.size = size;
+    this.basins = Math.sqrt(size);
     this.board = [][];
 
     for (let i = 0; i < this.size; i++) {
@@ -21,7 +22,20 @@ class Board {
     return this.size;
   }
 
+  /**
+   * Randomly distributes the basins around the board
+   */
   genBasins() {
-    const numBasins = Math.sqrt(this.size);
+    for (let i = 0; i < this.basins; i++) {
+      let x = Math.floor((Math.random() * 10));
+      let y = Math.floor((Math.random() * 10));
+
+      if (this.board[x][y] === 1) {
+        i--;
+        continue;
+      } else {
+        this.board[x][y] = 1;
+      }
+    }
   }
 }
