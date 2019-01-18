@@ -104,6 +104,9 @@ class Homepage extends Component {
           console.log("ok");
         }
         else {
+          let localBoard = this.state.localBoard;
+          localBoard[x][y] = "F";
+          this.setState({localBoard: localBoard});
           console.log('not ok');
         }
       });
