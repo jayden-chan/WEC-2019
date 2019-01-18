@@ -53,8 +53,8 @@ app.post('/click', (req, res) => {
     res.status(400).send('Missing x or y component');
   } else {
     const result = board.click(req.body.x, req.body.y);
-    if (result) {
-      res.status(200).send('OK');
+    if (result !== -1) {
+      res.status(200).send(JSON.stringify({adjacent: result}));
     } else {
       res.status(403).send('Hit a basin');
     }
