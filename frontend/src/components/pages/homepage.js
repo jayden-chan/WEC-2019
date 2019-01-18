@@ -6,6 +6,7 @@ class Homepage extends Component {
     super(props);
 
     this.state = {
+      sizeString: "10x10",
       size: 10,
       board: undefined,
       localBoard: []
@@ -20,6 +21,9 @@ class Homepage extends Component {
     const value = target.value;
     const name = target.name;
 
+    console.log(name);
+    console.log(value);
+
     this.setState({
       [name]: value
     });
@@ -30,7 +34,7 @@ class Homepage extends Component {
 
     let size;
 
-    switch(this.state.size) {
+    switch(this.state.sizeString) {
       case "10x10":
         size = 10;
         break;
@@ -53,7 +57,11 @@ class Homepage extends Component {
       }
     }
 
-    this.setState({localBoard: newBoard});
+    console.log(size);
+    this.setState({
+      localBoard: newBoard,
+      size: size
+    });
 
     console.log('fetching');
     fetch('/new', {
@@ -125,7 +133,7 @@ class Homepage extends Component {
     }
 
     let row = [];
-    const size = this.state.board.size;
+    const size = this.state.size;
 
     for (let i = 0; i < size; i++) {
       row.push((
@@ -150,7 +158,7 @@ class Homepage extends Component {
       )
     }
 
-    for (let i = 0; i < this.state.board.size; i++) {
+    for (let i = 0; i < this.state.size; i++) {
       rows.push((
         <div className="row" key={i}>
           {this.getRow(i)}
@@ -171,7 +179,7 @@ class Homepage extends Component {
     return (
      <div className="form-group">
       <label htmlFor="sel1">Select list:</label>
-      <select name="size" className="form-control" id="sel1" value={this.state.size} onChange={this.handleChange}>
+      <select name="sizeString" className="form-control" id="sel1" value={this.state.sizeString} onChange={this.handleChange}>
         <option>10x10</option>
         <option>20x20</option>
         <option>30x30</option>
