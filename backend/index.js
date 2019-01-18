@@ -29,7 +29,7 @@ app.get('/', (req, res) =>  {
   res.send('Hello World!');
 });
 
-app.get('/new', (req, res) => {
+app.post('/new', (req, res) => {
   if (req.body.size === null) {
     res.status(400).send('need board size');
   }
