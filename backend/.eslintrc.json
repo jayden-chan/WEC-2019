@@ -1,0 +1,42 @@
+{
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "indent": [
+      "warn",
+      2
+    ],
+    "quotes": [
+      "warn",
+      "single"
+    ],
+    "semi": [
+      "warn",
+      "always"
+    ],
+    "no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false
+      }
+    ],
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "no-cond-assign": [
+      "warn",
+      "always"
+    ],
+    "no-case-declarations": "off",
+    "no-console": "off"
+  }
+}
