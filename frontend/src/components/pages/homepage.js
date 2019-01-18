@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import "../../assets/css/custom.min.css";
 
 class Homepage extends Component {
 
@@ -6,6 +7,7 @@ class Homepage extends Component {
     super(props);
 
     this.state = {
+      gameIsRunning: false,
       sizeString: "10x10",
       size: 10,
       board: undefined,
@@ -60,10 +62,10 @@ class Homepage extends Component {
     console.log(size);
     this.setState({
       localBoard: newBoard,
-      size: size
+      size: size,
+      gameIsRunning: true
     });
 
-    console.log('fetching');
     fetch('/new', {
       method: 'post',
       headers: {
@@ -75,17 +77,24 @@ class Homepage extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          return res.json();
-        }
-        else {
-          return null;
-        }
-      })
-      .then(json => {
-        if (json !== null) {
-          console.log('setting state');
-          this.setState({board: json});
-          console.log(this.state);
+          fetch('/board', {
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+            .then(res => {
+              if (res.status === 200) {
+                return res.json();
+              } else {
+                return null;
+              }
+            })
+            .then(json => {
+              if (json !== null) {
+                this.setState({board: json});
+              }
+            });
         }
       });
 
@@ -109,22 +118,18 @@ class Homepage extends Component {
           let localBoard = this.state.localBoard;
           localBoard[x][y] = this.state.board.basins[x][y];
           this.setState({localBoard: localBoard});
-          console.log("ok");
         }
         else {
           let localBoard = this.state.localBoard;
-          localBoard[x][y] = "F";
-          this.setState({localBoard: localBoard});
-          console.log('not ok');
+          localBoard[x][y] = "B";
+          this.setState({
+            localBoard: localBoard,
+            gameIsRunning: false
+          });
+
+          alert('You hit a basin! Game over!');
         }
       });
-      // .then(json => {
-      //   if (json !== null) {
-      //     console.log('setting state');
-      //     this.setState({board: json});
-      //     console.log(this.state);
-      //   }
-      // });
   }
 
   getRow(num) {
@@ -136,13 +141,23 @@ class Homepage extends Component {
     const size = this.state.size;
 
     for (let i = 0; i < size; i++) {
-      row.push((
-        <div className="col-sm" key={num + i}>
-          <button onClick={() => this.onClick(i, num)}>
-            {this.state.localBoard[i][num]}
-          </button>
-        </div>
-      ));
+      if (this.state.gameIsRunning) {
+        row.push((
+          <div className="boardCell" key={num + i}>
+            <button onClick={() => this.onClick(i, num)}>
+              {this.state.localBoard[i][num]}
+            </button>
+          </div>
+        ));
+      } else {
+        row.push((
+          <div className="boardCell" key={num + i}>
+            <button disabled onClick={() => this.onClick(i, num)}>
+              {this.state.localBoard[i][num]}
+            </button>
+          </div>
+        ));
+      }
     }
 
     return row;
@@ -167,7 +182,7 @@ class Homepage extends Component {
     }
 
     return (
-      <div>
+      <div className="theBoard">
         <div className="container">
           {rows}
         </div>
@@ -177,13 +192,25 @@ class Homepage extends Component {
 
   options() {
     return (
-     <div className="form-group">
-      <label htmlFor="sel1">Select list:</label>
-      <select name="sizeString" className="form-control" id="sel1" value={this.state.sizeString} onChange={this.handleChange}>
-        <option>10x10</option>
-        <option>20x20</option>
-        <option>30x30</option>
-      </select>
+     <div className="button" class="form-group">
+      
+      <div class="container"  className="optionsLabel">
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <label htmlFor="sel1"><b>Select Board:</b></label>
+          </div>
+          <div class="col-auto">
+            <select name="size" className="form-control" id="sel1" value={this.state.size} onChange={this.handleChange}>
+              <option>10x10</option>
+              <option>20x20</option>
+              <option>30x30</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <input type="submit" className="btn btn-light" value="Start" />
+          </div>
+         </div>
+      </div>
     </div>
     )
   }
@@ -191,11 +218,14 @@ class Homepage extends Component {
   render() {
     return (
       <div>
-        <form method="post" onSubmit={this.handleSubmit}>
-          {this.options()}
-          <input type="submit" className="btn btn-primary" value="Update (this will restart the game)" />
-        </form>
-        {this.board()}
+          <form method="post" onSubmit={this.handleSubmit}>
+            {this.options()}
+          </form>
+          
+
+        <div class="row justify-content-center">
+          {this.board()}
+        </div>
       </div>
     );
   }
