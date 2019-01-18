@@ -5,7 +5,7 @@ class Board {
    */
   constructor(size) {
     this.size = (size < 3) ? 3 : size;
-    this.numBasins = Math.floor(Math.sqrt(size));
+    this.numBasins = size;
     this.board = [];
     this.basins = [];
 
@@ -52,16 +52,17 @@ class Board {
    * @return {Integer} The number of adjacent basins to the given point
    */
   adjacentBasins(x, y) {
-    const up = (y === 0) ? 0 : this.board[x][y-1];
-    const upRight = ((y === 0) || (x === this.size-1)) ? 0 : this.board[x+1][y-1]; 
-    const down = (y === this.size-1) ? 0 : this.board[x][y+1];
-    const downRight = (y === this.size-1) || (x === this.size-1) ? 0 : this.board[x+1][y+1]; 
-    const left = (x === 0) ? 0 : this.board[x-1][y];
-    const downLeft= (y === this.size-1) || (x === 0) ? 0 : this.board[x-1][y+1]; 
-    const right = (x === this.size-1) ? 0 : this.board[x+1][y];
-    const upLeft = (y === 0) || (x === 0) ? 0 : this.board[x-1][y-1]; 
+    const up = (y === 0) ? 0                                         : this.board[x][y-1];
+    const down = (y === this.size-1) ? 0                             : this.board[x][y+1];
+    const left = (x === 0) ? 0                                       : this.board[x-1][y];
+    const right = (x === this.size-1) ? 0                            : this.board[x+1][y];
 
-    return up + upRight + down + downLeft + left + downRight + right + topLeft;
+    const upLeft = (y === 0) || (x === 0) ? 0                        : this.board[x-1][y-1];
+    const upRight = ((y === 0) || (x === this.size-1)) ? 0           : this.board[x+1][y-1];
+    const downLeft= (y === this.size-1) || (x === 0) ? 0             : this.board[x-1][y+1];
+    const downRight = (y === this.size-1) || (x === this.size-1) ? 0 : this.board[x+1][y+1];
+
+    return up + upRight + down + downLeft + left + downRight + right + upLeft;
   }
 
   /**
